@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const Users = require('./user-model.js');
-
+const authorize = require('../auth/auth-middleware.js')
 //registering nanny
-router.post('/nanny', (req, res) => {
+router.post('/nanny', authorize, (req, res) => {
     const { name, email, zip_code, availability_start, availability_end } = req.body;
     Users.insertNanny({ name, email, zip_code, availability_start, availability_end })
         .then(id => {
@@ -81,7 +81,7 @@ router.put('/nanny/:id', (req, res) => {
         })
 })
 //post parent
-router.post('/parent', (req, res) => {
+router.post('/parent', authorize, (req, res) => {
     const { name, kids, email, zip_code } = req.body;
     Users.insertParent({ name, kids, email, zip_code })
         .then(id => {
