@@ -1,10 +1,33 @@
 const router = require('express').Router();
 const Users = require('./user-model.js');
 const authorize = require('../auth/auth-middleware.js')
+//get users
+router.get('/', (req, res) => {
+    Users.find()
+        .then(users => {
+            res.status(200).json(users)
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500).json({ error: 'error getting user' })
+        })
+})
+router.get('/:id', (req, res) => {
+    const { id } = req.params;
+    Users.findByUserId(id)
+        .then(user => {
+            res.status(200).json(user)
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500).json({ error: "erro getting user" })
+        })
+})
 //registering nanny
-router.post('/nanny', authorize, (req, res) => {
+router.post('/:user_id/nanny', authorize, (req, res) => {
+    const { user_id } = req.params;
     const { name, email, zip_code, availability_start, availability_end } = req.body;
-    Users.insertNanny({ name, email, zip_code, availability_start, availability_end })
+    Users.insertNanny({ name, email, zip_code, availability_start, availability_end, user_id })
         .then(id => {
             res.status(200).json({ message: 'Congradulations You are signed up!', id })
         })
@@ -25,9 +48,9 @@ router.get('/nanny', (req, res) => {
         })
 })
 //get nannyId
-router.get('/nanny/:id', (req, res) => {
-    const id = req.params.id;
-    Users.findByNannyId(id)
+router.get('/:user_id/nanny', (req, res) => {
+    const user_id = req.params.user_id;
+    Users.findByNannyId(user_id)
         .then(user => {
             if(user) {
                res.status(200).json(user) 
@@ -81,12 +104,13 @@ router.put('/nanny/:id', (req, res) => {
         })
 })
 //post parent
-router.post('/parent', (req, res) => {
+router.post('/:user_id/parent', authorize, (req, res) => {
+    const { user_id } = req.params;
     const { name, kids, email, zip_code } = req.body;
     if(!name && !kids && !email && !zip_code) {
         res.status(400).json({ error: 'Required Feilds not met'})
     }
-    Users.insertParent({ name, kids, email, zip_code })
+    Users.insertParent({ name, kids, email, zip_code, user_id })
         .then(id => {
             res.status(200).json({ message: 'Signup Succesful', id })
         })
@@ -107,7 +131,7 @@ router.get('/parent', authorize, (req, res) => {
         })
 })
 //get parentId
-router.get('/parent/:id', (req, res) => {
+router.get('/:id/parent', (req, res) => {
     const id = req.params.id;
     Users.findByParentId(id)
         .then(user => {

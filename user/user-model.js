@@ -12,6 +12,10 @@ function findByUsername(username) {
 function find() {
     return db('users');
 }
+function findByUserId(id) {
+    return db('users')
+        .where({ id }).first();
+}
 //nannys
 function insertNanny(user) {
     return db('nannys')
@@ -21,9 +25,9 @@ function insertNanny(user) {
 function findNannys() {
     return db('nannys')
 }
-function findByNannyId(id) {
+function findByNannyId(user_id) {
     return db('nannys')
-        .where({ id }).first()
+        .where({ user_id })
 }
 function updateNanny(id, user) {
     return db('nannys')
@@ -46,7 +50,7 @@ function findParents() {
 }
 function findByParentId(id) {
     return db('parents')
-        .where({ id }).first()
+        .where({ "user_id": id }).first()
 }
 function updateParent(id, user) {
     return db('parents')
@@ -62,6 +66,7 @@ module.exports = {
     insert,
     findByUsername,
     find,
+    findByUserId,
     findNannys,
     insertNanny,
     findByNannyId,
