@@ -81,7 +81,7 @@ router.put('/nanny/:id', (req, res) => {
         })
 })
 //post parent
-router.post('/parent', authorize, (req, res) => {
+router.post('/parent', (req, res) => {
     const { name, kids, email, zip_code } = req.body;
     Users.insertParent({ name, kids, email, zip_code })
         .then(id => {
@@ -93,7 +93,7 @@ router.post('/parent', authorize, (req, res) => {
         })
 });
 //get parents
-router.get('/parent', (req, res) => {
+router.get('/parent', auhtorize, (req, res) => {
     Users.findParents()
         .then(parents => {
             res.status(200).json(parents)
