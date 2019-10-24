@@ -93,7 +93,7 @@ router.post('/parent', (req, res) => {
         })
 });
 //get parents
-router.get('/parent', auhtorize, (req, res) => {
+router.get('/parent', authorize, (req, res) => {
     Users.findParents()
         .then(parents => {
             res.status(200).json(parents)
