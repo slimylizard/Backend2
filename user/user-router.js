@@ -24,7 +24,7 @@ router.get('/:id', (req, res) => {
         })
 })
 //registering nanny
-router.post('/:user_id/nanny', authorize, (req, res) => {
+router.post('/:user_id/nanny', (req, res) => {
     const { user_id } = req.params;
     const { name, email, zip_code, availability_start, availability_end } = req.body;
     Users.insertNanny({ name, email, zip_code, availability_start, availability_end, user_id })
@@ -104,7 +104,7 @@ router.put('/nanny/:id', (req, res) => {
         })
 })
 //post parent
-router.post('/:user_id/parent', authorize, (req, res) => {
+router.post('/:user_id/parent', (req, res) => {
     const { user_id } = req.params;
     const { name, kids, email, zip_code } = req.body;
     if(!name && !kids && !email && !zip_code) {
