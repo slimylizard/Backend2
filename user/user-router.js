@@ -83,6 +83,9 @@ router.put('/nanny/:id', (req, res) => {
 //post parent
 router.post('/parent', (req, res) => {
     const { name, kids, email, zip_code } = req.body;
+    if(!name && !kids && !email && !zip_code) {
+        res.status(400).json({ error: 'Required Feilds not met'})
+    }
     Users.insertParent({ name, kids, email, zip_code })
         .then(id => {
             res.status(200).json({ message: 'Signup Succesful', id })
